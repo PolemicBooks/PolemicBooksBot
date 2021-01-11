@@ -124,23 +124,4 @@ class Database:
 		
 		row = await self.conn.fetchrow(command, query_id)
 		return row.get("query_text")
-	
 
-ASYNCPG_OPTIONS = {
-	"host": "127.0.0.1",
-	"port": 5432,
-	"user": "plmcbks",
-	"database": "plmcbks",
-	"password": "](#8l(K]JNKW;,>E!QnF.VT§l\"O+rS0C%8AnHySM.1vJ#\b7;",
-}
-
-
-"""
-database = Database(ASYNCPG_OPTIONS)
-await database.initialize()
-await database.create_user(1)
-await database.get_user(1)
-await database.get_library(1)
-k = await database.create_query("Vidro")
-await database.get_query(k)
-"""
