@@ -78,7 +78,7 @@ def create_results(
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -188,7 +188,7 @@ def create_read_list(strings, page, books, prev_button=False, next_button=False)
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -214,7 +214,7 @@ def create_reading_list(strings, page, books, prev_button=False, next_button=Fal
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -240,7 +240,7 @@ def create_dropped_list(strings, page, books, prev_button=False, next_button=Fal
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -266,7 +266,7 @@ def create_favorite_list(strings, page, books, prev_button=False, next_button=Fa
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -331,7 +331,7 @@ def create_books_category(
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -396,7 +396,7 @@ def create_books_author(
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -461,7 +461,7 @@ def create_books_narrator(
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -526,7 +526,7 @@ def create_books_publisher(
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
@@ -591,7 +591,7 @@ def create_books_type(
 			break
 		
 		callback_data = dict(action="book", id=book.id)
-		inline_keyboard.append([InlineKeyboardButton(text=book.title, callback_data=json.dumps(callback_data))])
+		inline_keyboard.append([InlineKeyboardButton(text=book.title.original, callback_data=json.dumps(callback_data))])
 	
 	pagination_keyboards = []
 	
