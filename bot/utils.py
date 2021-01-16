@@ -11,7 +11,7 @@ def create_caption(book: Book) -> str:
 	
 	caption = ""
 	
-	base_url = "https://api.polemicnews.com/"
+	base_url = "https://api.polemicnews.com"
 	
 	if book.title:
 		caption += f"**{book.title.original}**\n\n"
@@ -35,13 +35,13 @@ def create_caption(book: Book) -> str:
 		)
 	if book.documents[0].downloadable:
 		caption += "**Documento**: __[Telegram]({}) / [HTTP]({})__".format(
-			os.path.join(base_url, book.documents[0].location), os.path.join(base_url, book.documents[0].download)
+			base_url + book.documents[0].location, base_url + book.documents[0].download
 		)
 	else:
 		caption += "**Documento**: __[Telegram]({})__".format(
-			os.path.join(base_url, book.documents[0].location)
+			base_url + book.documents[0].location
 		)
-	print(caption)
+	
 	return caption
 
 
