@@ -2,12 +2,32 @@ from typing import Union, List, Any
 from itertools import zip_longest
 
 from asyncpg.connection import Connection
-from unidecode import unidecode
+
+from .utils import remove_accents
 
 
 class Book:
 	"""Objeto representando informações sobre um livro."""
 	def __init__(self, book: dict) -> None:
+		
+		if book["title"]:
+			book["title"] = Title(book["title"])
+		
+		if book["category"]:
+			book["category"] = Category(book["category"])
+		
+		if book["type"]:
+			book["type"] = Type(book["type"])
+		
+		if book["author"]:
+			book["author"] = Author(book["author"])
+		
+		if book["narrator"]:
+			book["narrator"] = Narrator(book["narrator"])
+		
+		if book["publisher"]:
+			book["publisher"] = Publisher(book["publisher"])
+		
 		if book["duration"]:
 			book["duration"] = Duration(book["duration"])
 		
@@ -33,6 +53,41 @@ class Book:
 		book["documents"] = documents
 		
 		self.__dict__.update(book)
+
+
+class Narrator:
+	"""Objeto representando informações sobre o narrador de um livro."""
+	def __init__(self, duration: dict) -> None:
+		self.__dict__.update(duration)
+
+
+class Type:
+	"""Objeto representando informações sobre o tipo de um livro."""
+	def __init__(self, duration: dict) -> None:
+		self.__dict__.update(duration)
+
+
+class Publisher:
+	"""Objeto representando informações sobre a editora de um livro."""
+	def __init__(self, duration: dict) -> None:
+		self.__dict__.update(duration)
+
+class Author:
+	"""Objeto representando informações sobre o autor de um livro."""
+	def __init__(self, duration: dict) -> None:
+		self.__dict__.update(duration)
+
+
+class Category:
+	"""Objeto representando informações sobre a categoria de um livro."""
+	def __init__(self, duration: dict) -> None:
+		self.__dict__.update(duration)
+
+
+class Title:
+	"""Objeto representando informações sobre o título de um livro."""
+	def __init__(self, duration: dict) -> None:
+		self.__dict__.update(duration)
 
 
 class Duration:
@@ -137,35 +192,45 @@ class Library:
 		if isinstance(category, int):
 			category_name = self.categories[category]
 			for book in self.books:
-				if book.category == category_name:
+				if not book.category:
+					continue
+				if book.category.original == category_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(author, int):
 			author_name = self.authors[author]
 			for book in self.books:
-				if book.author == author_name:
+				if not book.author:
+					continue
+				if book.author.original == author_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(narrator, int):
 			narrator_name = self.narrators[narrator]
 			for book in self.books:
-				if book.narrator == narrator_name:
+				if not book.narrator:
+					continue
+				if book.narrator.original == narrator_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(publisher, int):
 			publisher_name = self.publishers[publisher]
 			for book in self.books:
-				if book.publisher == publisher_name:
+				if not book.publisher:
+					continue
+				if book.publisher.original == publisher_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(book_type, int):
 			type_name = self.types[book_type]
 			for book in self.books:
-				if book.type == type_name:
+				if not book.type:
+					continue
+				if book.type.original == type_name:
 					results.append(book)
 			return self.create_pagination(results)
 	
@@ -174,11 +239,13 @@ class Library:
 	def search(self, query: str) -> Union[None, List[Union[Book, None]]]:
 		search_results = []
 		
-		# Aqui convertemos todos os caracteres para ASCII (em minúsculo).
-		query = unidecode(query.lower())
+		# Aqui convertemos todos os caracteres para ASCII e minúsculo.
+		query = remove_accents(query.lower())
 		
 		for book in self.books:
-			if query in book.title_ascii_lower:
+			if not book.title:
+				continue
+			if query in book.title.ascii_lower:
 				search_results.append(book)
 		
 		if search_results:

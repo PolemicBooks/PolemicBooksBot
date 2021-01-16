@@ -309,14 +309,14 @@ async def handle_list_add(client: Client, callback: CallbackQuery) -> None:
 		await client.edit_message_text(
 			chat_id=callback.from_user.id,
 			message_id=callback.message.message_id,
-			text=strings.which_to_add.format(book.title),
+			text=strings.which_to_add.format(book.title.original),
 			reply_markup=reply_markup
 		)
 	else:
 		await client.edit_message_caption(
 			chat_id=callback.from_user.id,
 			message_id=callback.message.message_id,
-			caption=strings.which_to_add.format(book.title),
+			caption=strings.which_to_add.format(book.title.original),
 			reply_markup=reply_markup
 		)
 	

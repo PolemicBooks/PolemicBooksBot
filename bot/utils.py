@@ -11,21 +11,21 @@ def create_caption(book: Book) -> str:
 	caption = ""
 	
 	if book.title:
-		caption += f"**{book.title}**\n\n"
+		caption += f"**{book.title.original}**\n\n"
 	if book.type:
 		caption += f"**Tipo**: __{book.type}__\n"
 	if book.category:
-		caption += f"**Categoria**: __{book.category}__\n"
+		caption += f"**Categoria**: __{book.category.original}__\n"
 	if book.duration:
 		caption += f"**Duração**: __{book.duration.human}__\n"
 	if book.size:
 		caption += f"**Tamanho**: __{book.size.human}__\n"
 	if book.author:
-		caption += f"**Autor**: __{book.author}__\n"
+		caption += f"**Autor**: __{book.author.original}__\n"
 	if book.narrator:
-		caption += f"**Narrador**: __{book.narrator}__\n"
+		caption += f"**Narrador**: __{book.narrator.original}__\n"
 	if book.publisher:
-		caption += f"**Editora**: __{book.publisher}__\n"
+		caption += f"**Editora**: __{book.publisher.original}__\n"
 	if book.views:
 		caption += f"**Visualizações**: __{book.views}__\n"
 	if book.date:
@@ -42,12 +42,10 @@ def create_media_group(book: Book) -> List[InputMediaDocument]:
 	
 	group = []
 	
-	caption = f"**{book.type}**: {book.title}"
+	caption = f"**{book.type}**: {book.title.original}"
 	
 	for document in book.documents:
 		group.append(InputMediaDocument(document.file_id, caption=caption))
 	
 	return group
 
-
-		
