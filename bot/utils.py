@@ -39,7 +39,7 @@ def create_caption(book: Book) -> str:
 		)
 	else:
 		caption += "**Documento**: [Telegram]({})".format(
-			os.path.join(base_url, book.documents[0].download)
+			os.path.join(base_url, book.documents[0].location)
 		)
 	
 	return caption
