@@ -1,4 +1,5 @@
 from typing import List
+import os
 
 from pyrogram.types import InputMediaDocument
 
@@ -9,6 +10,8 @@ from .types.books_and_documents import Book
 def create_caption(book: Book) -> str:
 	
 	caption = ""
+	
+	base_url = "https://api.polemicnews.com/"
 	
 	if book.title:
 		caption += f"**{book.title.original}**\n\n"
@@ -26,13 +29,18 @@ def create_caption(book: Book) -> str:
 		caption += f"**Narrador**: __{book.narrator.original}__\n"
 	if book.publisher:
 		caption += f"**Editora**: __{book.publisher.original}__\n"
-	if book.views:
-		caption += f"**Visualizações**: __{book.views}__\n"
-	if book.date:
-		caption += f"**Adição**: __{book.date.human}__\n"
-	if book.id:
-		caption += f"**Identificação**: __{book.id}__\n"
-	
+	if book.photo:
+		caption += f"**Capa**: [Telegram]({}) / [HTTP]({})".format(
+			os.path.join(base_url, book.photo.location), os.path.join(base_url, book.photo.download)
+		)
+	if book.documents[0].downloadable:
+		caption += f"**Documento**: [Telegram]({}) / [HTTP]({})".format(
+			os.path.join(base_url, book.documents[0].location), os.path.join(base_url, book.documents[0].download)
+		)
+	else:
+		caption += f"**Documento**: [Telegram]({})".format(
+			os.path.join(base_url, book.documents[0].download)
+		)
 	
 	return caption
 
