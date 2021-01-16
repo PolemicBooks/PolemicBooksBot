@@ -13,7 +13,7 @@ def create_caption(book: Book) -> str:
 	if book.title:
 		caption += f"**{book.title.original}**\n\n"
 	if book.type:
-		caption += f"**Tipo**: __{book.type}__\n"
+		caption += f"**Tipo**: __{book.type.original}__\n"
 	if book.category:
 		caption += f"**Categoria**: __{book.category.original}__\n"
 	if book.duration:
