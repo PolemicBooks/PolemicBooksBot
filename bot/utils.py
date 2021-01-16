@@ -31,7 +31,7 @@ def create_caption(book: Book) -> str:
 		caption += f"**Editora**: __{book.publisher.original}__\n"
 	if book.photo:
 		caption += "**Capa**: __[Telegram]({}) / [HTTP]({})__\n".format(
-			os.path.join(base_url, book.photo.location), os.path.join(base_url, book.photo.download)
+			base_url + book.photo.location, base_url + book.photo.download
 		)
 	if book.documents[0].downloadable:
 		caption += "**Documento**: __[Telegram]({}) / [HTTP]({})__".format(
