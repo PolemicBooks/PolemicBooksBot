@@ -1157,7 +1157,7 @@ async def handle_category(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_category.format(books[0][0].category),
+		text=strings.books_by_category.format(books[0][0].category.original),
 		reply_markup=reply_markup
 	)
 
@@ -1342,7 +1342,7 @@ async def handle_author(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_author.format(books[0][0].author),
+		text=strings.books_by_author.format(books[0][0].author.original),
 		reply_markup=reply_markup
 	)
 
@@ -1526,7 +1526,7 @@ async def handle_narrator(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_narrator.format(books[0][0].narrator),
+		text=strings.books_by_narrator.format(books[0][0].narrator.original),
 		reply_markup=reply_markup
 	)
 
@@ -1710,7 +1710,7 @@ async def handle_publisher(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_publisher.format(books[0][0].publisher),
+		text=strings.books_by_publisher.format(books[0][0].publisher.original),
 		reply_markup=reply_markup
 	)
 
@@ -1894,7 +1894,7 @@ async def handle_type(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_type.format(books[0][0].type),
+		text=strings.books_by_type.format(books[0][0].type.original),
 		reply_markup=reply_markup
 	)
 

@@ -42,7 +42,7 @@ def create_media_group(book: Book) -> List[InputMediaDocument]:
 	
 	group = []
 	
-	caption = f"**{book.type}**: {book.title.original}"
+	caption = f"**{book.type.original}**: {book.title.original}"
 	
 	for document in book.documents:
 		group.append(InputMediaDocument(document.file_id, caption=caption))
