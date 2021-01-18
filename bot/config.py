@@ -30,8 +30,8 @@ PYROGRAM_OPTIONS = {
 ASYNCPG_OPTIONS = {
 	"host": "127.0.0.1",
 	"port": 5432,
-	"user": "plmcbks",
-	"database": "plmcbks",
+	"user": None,
+	"database": None,
 	"password": None,
 	"passfile": os.path.join(PGPASS_DIR, "pgpass"),
 }

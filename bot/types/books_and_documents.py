@@ -1,5 +1,6 @@
 from typing import Union, List, Any
 from itertools import zip_longest
+import random
 
 from asyncpg.connection import Connection
 
@@ -169,6 +170,17 @@ class Library:
 		return self.create_pagination(list(enumerate(self.types)), fillvalue=(None, None))
 	
 	
+	# Este método é usado para obter um livro aleatório da lista.
+	def get_random(self) -> Book:
+		book = random.choice(self.books)
+		
+		# Livros semi capa não são escolhidos
+		while not book.photo:
+			book = random.choice(self.books)
+		
+		return book
+	
+	
 	# Este método é usado para adicionar livros a lista.
 	def append(self, book: Book) -> None:
 		self.books.append(book)
@@ -192,45 +204,35 @@ class Library:
 		if isinstance(category, int):
 			category_name = self.categories[category]
 			for book in self.books:
-				if not book.category:
-					continue
-				if book.category.original == category_name:
+				if book.category and book.category.original == category_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(author, int):
 			author_name = self.authors[author]
 			for book in self.books:
-				if not book.author:
-					continue
-				if book.author.original == author_name:
+				if book.author and book.author.original == author_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(narrator, int):
 			narrator_name = self.narrators[narrator]
 			for book in self.books:
-				if not book.narrator:
-					continue
-				if book.narrator.original == narrator_name:
+				if book.narrator and book.narrator.original == narrator_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(publisher, int):
 			publisher_name = self.publishers[publisher]
 			for book in self.books:
-				if not book.publisher:
-					continue
-				if book.publisher.original == publisher_name:
+				if book.publisher and book.publisher.original == publisher_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(book_type, int):
 			type_name = self.types[book_type]
 			for book in self.books:
-				if not book.type:
-					continue
-				if book.type.original == type_name:
+				if book.type and book.type.original == type_name:
 					results.append(book)
 			return self.create_pagination(results)
 	
@@ -239,13 +241,21 @@ class Library:
 	def search(self, query: str) -> Union[None, List[Union[Book, None]]]:
 		search_results = []
 		
-		# Aqui convertemos todos os caracteres para ASCII e minúsculo.
+		# Aqui convertemos todos os caracteres para minúsculo e removemos os acentos.
 		query = remove_accents(query.lower())
 		
 		for book in self.books:
-			if not book.title:
-				continue
-			if query in book.title.ascii_lower:
+			if book.title and query in book.title.ascii_lower:
+				search_results.append(book)
+			elif book.type and query in book.type.ascii_lower:
+				search_results.append(book)
+			elif book.category and query in book.category.ascii_lower:
+				search_results.append(book)
+			elif book.author and query in book.author.ascii_lower:
+				search_results.append(book)
+			elif book.narrator and query in book.narrator.ascii_lower:
+				search_results.append(book)
+			elif book.publisher and query in book.publisher.ascii_lower:
 				search_results.append(book)
 		
 		if search_results:
@@ -259,9 +269,9 @@ class Library:
 
 class UserLibrary:
 	"""Um objeto representando uma listas contendo livros de um usuário."""
-	def __init__(self, index: int, connection: Connection, user_id: int, read: list, reading: list, dropped: list, favorites: list) -> None:
+	def __init__(self, index: int, conn: Connection, user_id: int, read: list, reading: list, dropped: list, favorites: list) -> None:
 		self.index = index
-		self.connection = connection
+		self.conn = conn
 		self.user_id = user_id
 		self.read = read
 		self.reading = reading
@@ -270,7 +280,7 @@ class UserLibrary:
 	
 	
 	# Este método é usado para obter uma lista de livros específica do usuário.
-	def get_list(self, category: Union[str, int]) -> List[int]:
+	def get_list(self, category: Union[str, int]) -> Union[List[int], None]:
 		
 		if category in (1, "read"):
 			return self.read if self.read else None
@@ -366,8 +376,8 @@ class UserLibrary:
 			WHERE user_id = $5
 		"""
 		
-		async with self.connection.transaction() as transaction:
-			await self.connection.execute(
+		async with self.conn.transaction() as transaction:
+			await self.conn.execute(
 				command,
 				self.read,
 				self.reading,
@@ -375,3 +385,16 @@ class UserLibrary:
 				self.favorites,
 				self.user_id
 			)
+	
+	
+	# Este método é usado para deletar a row do usuário.
+	async def delete(self) -> None:
+		command = """
+			DELETE FROM users
+			WHERE user_id = $1
+		"""
+		
+		async with self.conn.transaction() as transaction:
+			await self.conn.execute(command, self.user_id)
+	
+		

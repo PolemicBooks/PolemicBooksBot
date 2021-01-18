@@ -11,8 +11,6 @@ def create_caption(book: Book) -> str:
 	
 	caption = ""
 	
-	base_url = "https://api.polemicnews.com"
-	
 	if book.title:
 		caption += f"**{book.title.original}**\n\n"
 	if book.type:
@@ -29,18 +27,6 @@ def create_caption(book: Book) -> str:
 		caption += f"**Narrador**: __{book.narrator.original}__\n"
 	if book.publisher:
 		caption += f"**Editora**: __{book.publisher.original}__\n"
-	if book.photo:
-		caption += "**Capa**: __[Telegram]({}) / [HTTP]({})__\n".format(
-			base_url + book.photo.location, base_url + book.photo.download
-		)
-	if book.documents[0].downloadable:
-		caption += "**Documento**: __[Telegram]({}) / [HTTP]({})__".format(
-			base_url + book.documents[0].location, base_url + book.documents[0].download
-		)
-	else:
-		caption += "**Documento**: __[Telegram]({})__".format(
-			base_url + book.documents[0].location
-		)
 	
 	return caption
 

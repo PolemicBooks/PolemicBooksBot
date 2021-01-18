@@ -1,7 +1,7 @@
 import asyncio
 
 from pyrogram import Client
-from pyrogram.types import CallbackQuery
+from pyrogram.types import CallbackQuery, InputMediaPhoto
 
 from bot.config import ASYNCPG_OPTIONS, PYROGRAM_OPTIONS
 from bot.files import (
@@ -52,6 +52,85 @@ async def handle_help(client, message):
 	)
 	
 	await message.stop_propagation()
+	
+	return
+
+
+# Este handler é usado para enviar um livro aleatório para o usuário.
+@app.on_message(filters.command(commands=["random"]))
+async def handle_random(client, message):
+	
+	book = library.get_random()
+	
+	reply_markup = create_random(strings, book)
+	
+	await client.send_photo(
+		chat_id=message.from_user.id,
+		photo=book.photo.file_id,
+		caption=create_caption(book),
+		reply_markup=reply_markup
+	)
+	
+	return
+
+
+# Este retornará um menu onde será possível que o usuário exclua seus dados.
+@app.on_message(filters.command(commands=["delete"]))
+async def handle_delete(client, message):
+	
+	reply_markup = create_delete(strings)
+	
+	await client.send_message(
+		chat_id=message.from_user.id,
+		text=strings.delete.format(strings.button_delete_data),
+		reply_markup=reply_markup
+	)
+	
+	return
+
+
+# Este handler excluirá todos os dados que o bot possui sobre o usuário.
+@app.on_callback_query(filters=filters.delete_account)
+async def handle_delete_account(client: Client, callback: CallbackQuery) -> None:
+	
+	user_library = await database.get_library(callback.from_user.id)
+	await user_library.delete()
+	
+	await callback.message.delete()
+	
+	await client.answer_callback_query(
+		callback_query_id=callback.id,
+		text=strings.dialog_who_are_you
+	)
+	
+	await callback.stop_propagation()
+	
+	return
+
+
+# Este handler retornará um novo livro aleatório.
+@app.on_callback_query(filters=filters.new_random)
+async def handle_new_random(client: Client, callback: CallbackQuery) -> None:
+	
+	book = library.get_random()
+	
+	media = InputMediaPhoto(media=book.photo.file_id, caption=create_caption(book))
+	
+	reply_markup = create_random(strings, book)
+	
+	await client.edit_message_media(
+		chat_id=callback.from_user.id,
+		message_id=callback.message.message_id,
+		media=media,
+		reply_markup=reply_markup
+	)
+	
+	await client.answer_callback_query(
+		callback_query_id=callback.id,
+		text=strings.dialog_new_random
+	)
+
+	await callback.stop_propagation()
 	
 	return
 
@@ -182,7 +261,7 @@ async def handle_book_page(client: Client, callback: CallbackQuery) -> None:
 	book = library.get(data.id)
 	
 	if user_library.has(book, 4):
-		reply_markup = create_book_page(strings, book, favorited=True)
+		reply_markup = create_book_page(strings, book, is_favorited=True)
 	else:
 		reply_markup = create_book_page(strings, book)
 
@@ -223,7 +302,7 @@ async def handle_favorite(client: Client, callback: CallbackQuery) -> None:
 	user_library.add(book, 4)
 	await user_library.refresh()
 	
-	reply_markup = create_book_page(strings, book, favorited=True)
+	reply_markup = create_book_page(strings, book, is_favorited=True)
 	
 	await client.edit_message_reply_markup(
 		chat_id=callback.from_user.id,
@@ -439,7 +518,7 @@ async def handle_back_book(client: Client, callback: CallbackQuery) -> None:
 	book = library.get(data.id)
 	
 	if user_library.has(book, 4):
-		reply_markup = create_book_page(strings, book, favorited=True)
+		reply_markup = create_book_page(strings, book, is_favorited=True)
 	else:
 		reply_markup = create_book_page(strings, book)
 	
@@ -1971,6 +2050,30 @@ async def handle_prev_books_type(client: Client, callback: CallbackQuery) -> Non
 
 	return
 
+
+# Este handler retornará uma lista contendo todos os comandos do bot.
+@app.on_callback_query(filters=filters.commands)
+async def handle_commands(client: Client, callback: CallbackQuery) -> None:
+	
+	reply_markup = create_commands(strings)
+	
+	await client.edit_message_text(
+		chat_id=callback.from_user.id,
+		message_id=callback.message.message_id,
+		text=strings.commands,
+		reply_markup=reply_markup
+	)
+
+	await client.answer_callback_query(
+		callback_query_id=callback.id,
+		text=strings.dialog_commands_loaded
+	)
+
+	await callback.stop_propagation()
+
+	return
+
+	
 
 # Criamos nossa biblioteca.
 library = Library(

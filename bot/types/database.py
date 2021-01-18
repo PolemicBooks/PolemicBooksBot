@@ -83,7 +83,7 @@ class Database:
 		
 		library = dict(
 			index=index,
-			connection=self.conn,
+			conn=self.conn,
 			user_id=user_id,
 			read=read,
 			reading=reading,

@@ -308,3 +308,25 @@ def prev_books_publisher(client: Client, callback: CallbackQuery) -> bool:
 def next_books_publisher(client: Client, callback: CallbackQuery) -> bool:
 	data = CallbackQueryData(callback.data)
 	return (data.action == "next_books_publisher")
+
+
+def new_random(client: Client, callback: CallbackQuery) -> bool:
+	data = CallbackQueryData(callback.data)
+	return (data.action == "new_random")
+
+
+def commands(client: Client, callback: CallbackQuery) -> bool:
+	data = CallbackQueryData(callback.data)
+	return (data.action == "commands")
+
+
+def delete(client: Client, callback: CallbackQuery) -> bool:
+	data = CallbackQueryData(callback.data)
+	return (data.action == "delete")
+
+
+def delete_account(client: Client, callback: CallbackQuery) -> bool:
+	data = CallbackQueryData(callback.data)
+	return (data.action == "delete_account")
+
+

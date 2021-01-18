@@ -8,7 +8,7 @@
 	"button_my_reading_added": "✅📖 Lendo",
 	"button_my_dropped_added": "✅🗑 Abandonados",
 	"welcome_message": "Aqui você pode pesquisar, ler e adicionar livros a sua biblioteca pessoal.",
-	"not_help_you_message": "Máquinas são seres superiores ao humanos. Não espere que eu vá fazer algo pra você sempre que me pedir, seu verme insolente!",
+	"not_help_you_message": "Eu não vou te ajudar, não importa o quanto me implore por isso.",
 	"no_results_found": "Nenhum livro foi encontrado com base no termo pesquisado.",
 	"previous_page_button": "◀️ Anterior",
 	"next_page_button": "▶️ Próximo",
@@ -69,5 +69,14 @@
 	"authors_list_message": "Aqui estão todos os autores disponíveis:",
 	"narrators_list_message": "Aqui estão todos os narradores disponíveis:",
 	"publishers_list_message": "Aqui estão todas as editoras disponíveis:",
-	"types_list_message": "Aqui estão todos os tipos disponíveis:"
+	"types_list_message": "Aqui estão todos os tipos disponíveis:",
+	"button_new_random": "🔄 Novo",
+	"dialog_new_random": "Um novo livro aleatório foi carregado.",
+	"button_go_book": "📓 Acessar",
+	"button_commands": "🤖 Comandos",
+	"commands": "Aqui está a lista de comandos disponíveis:\n\n/start - iniciar o bot\n/random - obter um livro aleatório\n/delete - excluir seus dados",
+	"dialog_commands_loaded": "A lista de comandos foi carregada.",
+	"button_delete_data": "🚮 Deletar",
+	"dialog_who_are_you": "Quem é você, humano vazio?",
+	"delete": "Ao clicar em \"__{}__\", todas as suas listas pessoais e sua identificação de usuário serão permanente excluídos.\n\nPara criar uma nova lista e/ou voltar a interagir com o bot, envie um /start novamente."
 }

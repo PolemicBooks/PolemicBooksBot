@@ -15,6 +15,9 @@ def create_welcome(strings):
 	callback_data = dict(action="browse")
 	inline_keyboard.append([InlineKeyboardButton(text=strings.button_browse, callback_data=json.dumps(callback_data))])
 	
+	callback_data = dict(action="commands")
+	inline_keyboard.append([InlineKeyboardButton(text=strings.button_commands, callback_data=json.dumps(callback_data))])
+	
 	return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
 
 
@@ -95,13 +98,13 @@ def create_results(
 	return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
 
 
-def create_book_page(strings, book, favorited=False):
+def create_book_page(strings, book, is_favorited=False):
 	
 	inline_keyboard = []
 	
 	callback_data = dict(action="get_document", id=book.id)
 	
-	if book.type == "Audiobook":
+	if book.type.original == "Audiobook":
 		inline_keyboard.append([InlineKeyboardButton(text=strings.button_listen_book, callback_data=json.dumps(callback_data))])
 	else:
 		inline_keyboard.append([InlineKeyboardButton(text=strings.button_read_book, callback_data=json.dumps(callback_data))])
@@ -109,7 +112,7 @@ def create_book_page(strings, book, favorited=False):
 	callback_data = dict(action="list_add", id=book.id)
 	inline_keyboard.append([InlineKeyboardButton(text=strings.button_add_library, callback_data=json.dumps(callback_data))])
 	
-	if favorited:
+	if is_favorited:
 		callback_data = dict(action="unfavorite", id=book.id)
 		inline_keyboard.append([InlineKeyboardButton(text=strings.button_unfavorite, callback_data=json.dumps(callback_data))])
 	else:
@@ -604,6 +607,42 @@ def create_books_type(
 		pagination_keyboards.append(InlineKeyboardButton(text=strings.next_page_button, callback_data=json.dumps(callback_data)))
 	
 	inline_keyboard.append(pagination_keyboards)
+	
+	return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+
+
+def create_random(strings, book):
+	
+	inline_keyboard = []
+	
+	callback_data = dict(action="book", id=book.id)
+	inline_keyboard.append([InlineKeyboardButton(text=strings.button_go_book, callback_data=json.dumps(callback_data))])
+	
+	callback_data = dict(action="new_random")
+	inline_keyboard.append([InlineKeyboardButton(text=strings.button_new_random, callback_data=json.dumps(callback_data))])
+	
+	callback_data = dict(action="delete_message")
+	inline_keyboard.append([InlineKeyboardButton(text=strings.button_quit, callback_data=json.dumps(callback_data))])
+	
+	return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+
+
+def create_commands(strings):
+	
+	inline_keyboard = []
+	
+	callback_data = dict(action="back_welcome")
+	inline_keyboard.append([InlineKeyboardButton(text=strings.button_go_back, callback_data=json.dumps(callback_data))])
+	
+	return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+
+
+def create_delete(strings):
+	
+	inline_keyboard = []
+	
+	callback_data = dict(action="delete_account")
+	inline_keyboard.append([InlineKeyboardButton(text=strings.button_delete_data, callback_data=json.dumps(callback_data))])
 	
 	return InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
 
