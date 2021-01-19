@@ -250,35 +250,41 @@ class Library:
 		]
 		
 		for book in self.books:
-			if book.title and query in book.title.ascii_lower:
-				search_results.append(book)
-			elif all(word in book.title.ascii_lower for word in splited_query):
-				search_results.append(book)
+			if book.title:
+				if query in book.title.ascii_lower:
+					search_results.append(book)
+				elif all(word in book.title.ascii_lower for word in splited_query):
+					search_results.append(book)
 			
-			if book.type and query in book.type.ascii_lower:
-				search_results.append(book)
-			elif all(word in book.type.ascii_lower for word in splited_query):
-				search_results.append(book)
+			if book.type:
+				if query in book.type.ascii_lower:
+					search_results.append(book)
+				elif all(word in book.type.ascii_lower for word in splited_query):
+					search_results.append(book)
 			
-			if book.category and query in book.category.ascii_lower:
-				search_results.append(book)
-			elif all(word in book.category.ascii_lower for word in splited_query):
-				search_results.append(book)
+			if book.category:
+				if and query in book.category.ascii_lower:
+					search_results.append(book)
+				elif all(word in book.category.ascii_lower for word in splited_query):
+					search_results.append(book)
 			
-			if book.author and query in book.author.ascii_lower:
-				search_results.append(book)
-			elif all(word in book.author.ascii_lower for word in splited_query):
-				search_results.append(book)
+			if book.author:
+				if query in book.author.ascii_lower:
+					search_results.append(book)
+				elif all(word in book.author.ascii_lower for word in splited_query):
+					search_results.append(book)
 			
-			if book.narrator and query in book.narrator.ascii_lower:
-				search_results.append(book)
-			elif all(word in book.narrator.ascii_lower for word in splited_query):
-				search_results.append(book)
+			if book.narrator:
+				if query in book.narrator.ascii_lower:
+					search_results.append(book)
+				elif all(word in book.narrator.ascii_lower for word in splited_query):
+					search_results.append(book)
 			
-			if book.publisher and query in book.publisher.ascii_lower:
-				search_results.append(book)
-			elif all(word in book.publisher.ascii_lower for word in splited_query):
-				search_results.append(book)
+			if book.publisher:
+				if query in book.publisher.ascii_lower:
+					search_results.append(book)
+				elif all(word in book.publisher.ascii_lower for word in splited_query):
+					search_results.append(book)
 		
 		if search_results:
 			return self.create_pagination(search_results)
