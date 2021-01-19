@@ -263,7 +263,7 @@ class Library:
 					search_results.append(book)
 			
 			if book.category:
-				if and query in book.category.ascii_lower:
+				if query in book.category.ascii_lower:
 					search_results.append(book)
 				elif all(word in book.category.ascii_lower for word in splited_query):
 					search_results.append(book)
