@@ -244,18 +244,40 @@ class Library:
 		# Aqui convertemos todos os caracteres para minúsculo e removemos os acentos.
 		query = remove_accents(query.lower())
 		
+		# Aqui separamos cada palavra com mais de 2 caracteres em uma lista.
+		splited_query = [
+			word for word in query.split() if len(word) > 2
+		]
+		
 		for book in self.books:
 			if book.title and query in book.title.ascii_lower:
 				search_results.append(book)
-			elif book.type and query in book.type.ascii_lower:
+			elif all(word in book.title.ascii_lower for word in splited_query):
 				search_results.append(book)
-			elif book.category and query in book.category.ascii_lower:
+			
+			if book.type and query in book.type.ascii_lower:
 				search_results.append(book)
-			elif book.author and query in book.author.ascii_lower:
+			elif all(word in book.type.ascii_lower for word in splited_query):
 				search_results.append(book)
-			elif book.narrator and query in book.narrator.ascii_lower:
+			
+			if book.category and query in book.category.ascii_lower:
 				search_results.append(book)
-			elif book.publisher and query in book.publisher.ascii_lower:
+			elif all(word in book.category.ascii_lower for word in splited_query):
+				search_results.append(book)
+			
+			if book.author and query in book.author.ascii_lower:
+				search_results.append(book)
+			elif all(word in book.author.ascii_lower for word in splited_query):
+				search_results.append(book)
+			
+			if book.narrator and query in book.narrator.ascii_lower:
+				search_results.append(book)
+			elif all(word in book.narrator.ascii_lower for word in splited_query):
+				search_results.append(book)
+			
+			if book.publisher and query in book.publisher.ascii_lower:
+				search_results.append(book)
+			elif all(word in book.publisher.ascii_lower for word in splited_query):
 				search_results.append(book)
 		
 		if search_results:
