@@ -1,5 +1,4 @@
 import datetime
-import time
 from typing import Union, List, Any
 from itertools import zip_longest
 import random
@@ -25,18 +24,6 @@ class Duration(int):
 		self.human = str(datetime.timedelta(seconds=seconds))
 
 
-class Date(int):
-	"""Um objeto representando informações sobre uma data."""
-	def __init__(self, epoch):
-		
-		time_object = datetime.datetime.fromtimestamp(epoch)
-		
-		self.human = str(time_object)
-		self.http = time.strftime(
-			"%a, %d %b %Y %H:%M:%S GMT", time_object.timetuple()
-		)
-
-
 class Size(int):
 	"""Um objeto representando informações sobre o tamanho de um arquivo."""
 	def __init__(self, size):
@@ -59,7 +46,7 @@ class Book:
 	"""Objeto representando informações sobre um livro."""
 	def __init__(self, book: dict) -> None:
 		
-		self.date = Date(book["date"]) if book["date"] else None
+		self.message = book["message"]
 		self.title = Title(book["title"]) if book["title"] else None
 		self.type = Title(book["type"]) if book["type"] else None
 		self.category = Title(book["category"]) if book["category"] else None
