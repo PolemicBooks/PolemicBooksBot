@@ -118,11 +118,11 @@ categories, types, authors, narrators, publishers = (
 
 for book in books:
 	category, book_type, author, narrator, publisher = (
-		None if book["category"] is None else book["category"]["original"],
-		None if book["type"] is None else book["type"]["original"],
-		None if book["author"] is None else book["author"]["original"],
-		None if book["narrator"] is None else book["narrator"]["original"],
-		None if book["publisher"] is None else book["publisher"]["original"]
+		None if book["category"] is None else book["category"],
+		None if book["type"] is None else book["type"],
+		None if book["author"] is None else book["author"],
+		None if book["narrator"] is None else book["narrator"],
+		None if book["publisher"] is None else book["publisher"]
 	)
 	
 	if category and category not in categories:
