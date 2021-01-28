@@ -54,7 +54,11 @@ def human_duration_to_seconds(text):
 
 
 def capitalize_words(string):
-	return " ".join([word.capitalize() if not word.istitle() and len(word) > 3 else word for word in string.split(" ")])
+	return " ".join(
+		[
+			word.capitalize() if not word.istitle() and len(word) > 3 else word for word in string.split(" ")
+		]
+	)
 
 
 def remove_accents(string):

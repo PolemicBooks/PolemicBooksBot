@@ -1,130 +1,90 @@
+import datetime
+import time
 from typing import Union, List, Any
 from itertools import zip_longest
 import random
 
 from asyncpg.connection import Connection
 
-from .utils import remove_accents
+from .config import CHAT_ID
+from .utils import remove_accents, capitalize_words
+
+
+# Um objeto representando um tipo de título, geralmente
+# o nome de um autor, editora, categoria e entre outros.
+class Title(str):
+	
+	def __init__(self, string):
+		self.capitalized = capitalize_words(string)
+		self.ascii_lower = remove_accents(string)
+
+
+class Duration(int):
+	"""Um objeto representando a duração de um audiobook."""
+	def __init__(self, seconds):
+		self.human = str(datetime.timedelta(seconds=seconds))
+
+
+class Date(int):
+	"""Um objeto representando informações sobre uma data."""
+	def __init__(self, epoch):
+		
+		time_object = datetime.datetime.fromtimestamp(epoch)
+		
+		self.human = str(time_object)
+		self.http = time.strftime(
+			"%a, %d %b %Y %H:%M:%S GMT", time_object.timetuple()
+		)
+
+
+class Size(int):
+	"""Um objeto representando informações sobre o tamanho de um arquivo."""
+	def __init__(self, size):
+		self.human = bytes_to_human(size)
+
+
+class Message(int):
+	"""Um objeto representando infortações sobre uma mensagem no Telegram."""
+	def __init__(self, message_id):
+		self.link = "https://t.me/c/{}/{}".format(
+			abs(CHAT_ID), message_id
+		)
+
+
+class Document:
+	"""Objeto representando informações sobre um documento."""
+	def __init__(self, document):
+		self.message = Message(document["message"]) if document["message"] else None
+		self.file_name = document["file_name"]
+		self.file_id = document["file_id"]
+
+
+class Photo:
+	"""Objeto representando informações sobre uma imagem."""
+	def __init__(self, photo):
+		self.file_id = photo["file_id"]
 
 
 class Book:
 	"""Objeto representando informações sobre um livro."""
 	def __init__(self, book: dict) -> None:
 		
-		if book["title"]:
-			book["title"] = Title(book["title"])
-		
-		if book["category"]:
-			book["category"] = Category(book["category"])
-		
-		if book["type"]:
-			book["type"] = Type(book["type"])
-		
-		if book["author"]:
-			book["author"] = Author(book["author"])
-		
-		if book["narrator"]:
-			book["narrator"] = Narrator(book["narrator"])
-		
-		if book["publisher"]:
-			book["publisher"] = Publisher(book["publisher"])
-		
-		if book["duration"]:
-			book["duration"] = Duration(book["duration"])
-		
-		book["size"] = Size(book["size"])
-		book["date"] = Date(book["date"])
-		
-		if book["photo"]:
-			book["photo"]["date"] = Date(book["photo"]["date"])
-			book["photo"]["file_size"] = Size(book["photo"]["file_size"])
-			book["photo"]["resolution"] = Resolution(book["photo"]["resolution"])
-			
-			book["photo"] = Cover(book["photo"])
-		
-		documents = []
+		self.date = Date(book["date"]) if book["date"] else None
+		self.title = Title(book["title"]) if book["title"] else None
+		self.type = Title(book["type"]) if book["type"] else None
+		self.category = Title(book["category"]) if book["category"] else None
+		self.author = Title(book["author"]) if book["author"] else None
+		self.narrator = Title(book["narrator"]) if book["narrator"] else None
+		self.publisher = Title(book["publisher"]) if book["publisher"] else None
+		self.duration = Duration(book["duration"]) if book["duration"] else None
+		self.size = Size(book["size"]) if book["size"] else None
+		self.photo = Photo(book["photo"]) if book["photo"] else None
+		self.documents = []
 		
 		for document in book["documents"]:
-			document["date"] = Date(document["date"])
-			document["file_size"] = Size(document["file_size"])
-			
-			document = Document(document)
-			documents.append(document)
-		
-		book["documents"] = documents
-		
-		self.__dict__.update(book)
-
-
-class Narrator:
-	"""Objeto representando informações sobre o narrador de um livro."""
-	def __init__(self, duration: dict) -> None:
-		self.__dict__.update(duration)
-
-
-class Type:
-	"""Objeto representando informações sobre o tipo de um livro."""
-	def __init__(self, duration: dict) -> None:
-		self.__dict__.update(duration)
-
-
-class Publisher:
-	"""Objeto representando informações sobre a editora de um livro."""
-	def __init__(self, duration: dict) -> None:
-		self.__dict__.update(duration)
-
-class Author:
-	"""Objeto representando informações sobre o autor de um livro."""
-	def __init__(self, duration: dict) -> None:
-		self.__dict__.update(duration)
-
-
-class Category:
-	"""Objeto representando informações sobre a categoria de um livro."""
-	def __init__(self, duration: dict) -> None:
-		self.__dict__.update(duration)
-
-
-class Title:
-	"""Objeto representando informações sobre o título de um livro."""
-	def __init__(self, duration: dict) -> None:
-		self.__dict__.update(duration)
-
-
-class Duration:
-	"""Objeto representando a duração total de um audiobook."""
-	def __init__(self, duration: dict) -> None:
-		self.__dict__.update(duration)
-
-
-class Size:
-	"""Objeto representando o tamanho de um documento ou imagem."""
-	def __init__(self, size: dict) -> None:
-		self.__dict__.update(size)
-
-
-class Cover:
-	"""Objeto representando informações sobre o cover de um livro."""
-	def __init__(self, cover: dict) -> None:
-		self.__dict__.update(cover)
-
-
-class Date:
-	"""Objeto representando a data de adição de um livro."""
-	def __init__(self, date: dict) -> None:
-		self.__dict__.update(date)
-
-
-class Resolution:
-	"""Objeto representando as resoluções de uma imagem."""
-	def __init__(self, resolution: dict) -> None:
-		self.__dict__.update(resolution)
-
-
-class Document:
-	"""Objeto representando informações sobre um documento."""
-	def __init__(self, document: dict) -> None:
-		self.__dict__.update(document)
+			self.documents.append(
+				Document(document)
+			)
 
 
 class Library:
@@ -172,13 +132,7 @@ class Library:
 	
 	# Este método é usado para obter um livro aleatório da lista.
 	def get_random(self) -> Book:
-		book = random.choice(self.books)
-		
-		# Livros semi capa não são escolhidos
-		while not book.photo:
-			book = random.choice(self.books)
-		
-		return book
+		return random.choice(self.books)
 	
 	
 	# Este método é usado para adicionar livros a lista.
@@ -192,7 +146,7 @@ class Library:
 	def get(self, message_id: int) -> Union[None, Book]:
 		
 		for book in self.books:
-			if book.id == message_id:
+			if book.message == message_id:
 				return book
 	
 	
@@ -204,35 +158,35 @@ class Library:
 		if isinstance(category, int):
 			category_name = self.categories[category]
 			for book in self.books:
-				if book.category and book.category.original == category_name:
+				if book.category and book.category == category_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(author, int):
 			author_name = self.authors[author]
 			for book in self.books:
-				if book.author and book.author.original == author_name:
+				if book.author and book.author == author_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(narrator, int):
 			narrator_name = self.narrators[narrator]
 			for book in self.books:
-				if book.narrator and book.narrator.original == narrator_name:
+				if book.narrator and book.narrator == narrator_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(publisher, int):
 			publisher_name = self.publishers[publisher]
 			for book in self.books:
-				if book.publisher and book.publisher.original == publisher_name:
+				if book.publisher and book.publisher == publisher_name:
 					results.append(book)
 			return self.create_pagination(results)
 		
 		if isinstance(book_type, int):
 			type_name = self.types[book_type]
 			for book in self.books:
-				if book.type and book.type.original == type_name:
+				if book.type and book.type == type_name:
 					results.append(book)
 			return self.create_pagination(results)
 	
@@ -251,40 +205,40 @@ class Library:
 		
 		for book in self.books:
 			if book.title:
-				if query in book.title.ascii_lower:
+				if (query in book.title.ascii_lower or
+					all(word in book.title.ascii_lower for word in splited_query)):
 					search_results.append(book)
-				elif all(word in book.title.ascii_lower for word in splited_query):
-					search_results.append(book)
+					continue
 			
 			if book.type:
-				if query in book.type.ascii_lower:
+				if (query in book.type.ascii_lower or
+					all(word in book.type.ascii_lower for word in splited_query)):
 					search_results.append(book)
-				elif all(word in book.type.ascii_lower for word in splited_query):
-					search_results.append(book)
+					continue
 			
 			if book.category:
-				if query in book.category.ascii_lower:
+				if (query in book.category.ascii_lower or
+					all(word in book.category.ascii_lower for word in splited_query)):
 					search_results.append(book)
-				elif all(word in book.category.ascii_lower for word in splited_query):
-					search_results.append(book)
+					continue
 			
 			if book.author:
-				if query in book.author.ascii_lower:
+				if (query in book.author.ascii_lower or
+					all(word in book.author.ascii_lower for word in splited_query)):
 					search_results.append(book)
-				elif all(word in book.author.ascii_lower for word in splited_query):
-					search_results.append(book)
+					continue
 			
 			if book.narrator:
-				if query in book.narrator.ascii_lower:
+				if (query in book.narrator.ascii_lower or
+					all(word in book.narrator.ascii_lower for word in splited_query)):
 					search_results.append(book)
-				elif all(word in book.narrator.ascii_lower for word in splited_query):
-					search_results.append(book)
+					continue
 			
 			if book.publisher:
-				if query in book.publisher.ascii_lower:
+				if (query in book.publisher.ascii_lower or
+					all(word in book.publisher.ascii_lower for word in splited_query)):
 					search_results.append(book)
-				elif all(word in book.publisher.ascii_lower for word in splited_query):
-					search_results.append(book)
+					continue
 		
 		if search_results:
 			return self.create_pagination(search_results)

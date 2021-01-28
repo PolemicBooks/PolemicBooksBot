@@ -18,6 +18,10 @@ book = {}
 client = Client(**PYROGRAM_OPTIONS)
 client.start()
 
+FALLBACK_COVER = {
+	"file_id": client.get_messages(FALLBACK_CHAT, COVER_MESSAGE_ID).photo.file_id
+}
+
 while message_id < 145000:
 	
 	message_id += 1
@@ -26,7 +30,7 @@ while message_id < 145000:
 	if message_id in (2, 10596, 10597, 13337, 131117, 134378, 134379):
 		continue
 	
-	message = client.get_messages("@PolemicBooks", message_id)
+	message = client.get_messages(CHAT_ID, message_id)
 	
 	if message.empty or message.service:
 		continue
@@ -47,71 +51,17 @@ while message_id < 145000:
 		)
 		
 		book = {
-			"id": message.message_id,
-			"date": {
-				"epoch": message.date,
-				"human": time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.localtime(message.date))
-			},
-			"title": None if book_title is None else {
-				"original": None if book_title is None else book_title,
-				"capitalized": None if book_title is None else capitalize_words(book_title),
-				"ascii_lower": None if book_title is None else remove_accents(book_title).lower()
-			},
-			"type": None if book_type is None else {
-				"original": None if book_type is None else book_type,
-				"capitalized": None if book_type is None else capitalize_words(book_type),
-				"ascii_lower": None if book_type is None else remove_accents(book_type).lower()
-			},
-			"category": None if category is None else {
-				"original": None if category is None else category.replace("\\", "/"),
-				"capitalized": None,
-				"ascii_lower": None if category is None else remove_accents(category.replace("\\", "/").lower()),
-			},
-			"duration": None if book_type != "Audiobook" else {"seconds": human_duration_to_seconds(message.caption.markdown), "human": duration},
-			"size": {
-				"bytes": 0,
-				"human": None
-			},
-			"author": None if author is None else {
-				"original": None if author is None else author,
-				"capitalized": None if author is None else capitalize_words(author),
-				"ascii_lower": None if author is None else remove_accents(author).lower()
-			},
-			"narrator": None if narrator is None else {
-				"original": None if narrator is None else narrator,
-				"capitalized": None if narrator is None else capitalize_words(narrator),
-				"ascii_lower": None if narrator is None else remove_accents(narrator).lower()
-			},
-			"publisher": None if publisher is None else {
-				"original": None if publisher is None else publisher,
-				"capitalized": None if publisher is None else capitalize_words(publisher),
-				"ascii_lower": None if publisher is None else remove_accents(publisher).lower()
-			},
-			"views": message.views,
-			"location": f"/l/{message.message_id}",
+			"message": message.message_id,
+			"title": book_title,
+			"type": book_type,
+			"category": category,
+			"duration": None if book_type != "Audiobook" else human_duration_to_seconds(message.text.markdown),
+			"size": 0,
+			"author": author,
+			"narrator": narrator,
+			"publisher": publisher,
 			"photo": {
-				"id": message.message_id,
-				"kind": "cover",
-				"date": {
-					"epoch": message.photo.date,
-					"human": time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.localtime(message.photo.date))
-				},
-				"file_extension": "jpeg",
-				"file_id": message.photo.file_id,
-				"file_name": convert_filename(book_title) + ".jpeg",
-				"file_size": {
-					"bytes": message.photo.file_size,
-					"human": bytes_to_human(message.photo.file_size)
-				},
-				"file_unique_id": message.photo.file_unique_id,
-				"mime_type": "image/jpeg",
-				"resolution": {
-					"height": message.photo.height,
-					"width": message.photo.width
-				},
-				"downloadable": True if message.photo.file_size <= 20000000 else False,
-				"location": f"/l/{message.message_id}",
-				"download": f"/d/{message.message_id}" if message.photo.file_size <= 20000000 else None
+				"file_id": message.photo.file_id
 			},
 			"documents": [],
 		}
@@ -134,49 +84,15 @@ while message_id < 145000:
 		)
 		
 		book = {
-			"id": message.message_id,
-			"date": {
-				"epoch": message.date,
-				"human": time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.localtime(message.date))
-			},
-			"title": None if book_title is None else {
-				"original": None if book_title is None else book_title,
-				"capitalized": None if book_title is None else capitalize_words(book_title),
-				"ascii_lower": None if book_title is None else remove_accents(book_title).lower()
-			},
-			"type": None if book_type is None else {
-				"original": None if book_type is None else book_type,
-				"capitalized": None if book_type is None else capitalize_words(book_type),
-				"ascii_lower": None if book_type is None else remove_accents(book_type).lower()
-			},
-			"category": None if category is None else {
-				"original": None if category is None else category.replace("\\", "/"),
-				"capitalized": None if category is None else capitalize_words(category),
-				"ascii_lower": None if category is None else remove_accents(category.replace("\\", "/").lower()),
-			},
-			"duration": None if book_type != "Audiobook" else {"seconds":  human_duration_to_seconds(message.text.markdown), "human": duration},
-			"size": {
-				"bytes": 0,
-				"human": None
-			},
-			"author": None if author is None else {
-				"original": None if author is None else author,
-				"capitalized": None if author is None else capitalize_words(author),
-				"ascii_lower": None if author is None else remove_accents(author).lower()
-			},
-			"narrator": None if narrator is None else {
-				"original": None if narrator is None else narrator,
-				"capitalized": None if narrator is None else capitalize_words(narrator),
-				"ascii_lower": None if narrator is None else remove_accents(narrator).lower()
-			},
-			"publisher": None if publisher is None else {
-				"original": None if publisher is None else publisher,
-				"capitalized": None if publisher is None else capitalize_words(publisher),
-				"ascii_lower": None if publisher is None else remove_accents(publisher).lower()
-			},
-			"views": message.views,
-			"photo": None,
-			"location": f"/l/{message.message_id}",
+			"title": book_title,
+			"type": book_type,
+			"category": category,
+			"duration": None if book_type != "Audiobook" else human_duration_to_seconds(message.text.markdown),
+			"size": 0,
+			"author": author,
+			"narrator": narrator,
+			"publisher": publisher,
+			"photo": FALLBACK_COVER,
 			"documents": []
 		}
 		
@@ -184,29 +100,11 @@ while message_id < 145000:
 	
 	if message.document:
 		document = {
-			"id": message.message_id,
-			"kind": "audiobook" if book_type == "Audiobook" else "ebook",
-			"date": {
-				"epoch": message.document.date,
-				"human": time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.localtime(message.document.date))
-			},
-			"file_extension": message.document.file_name.split(".")[-1],
-			"file_id": message.document.file_id,
-			"file_name": message.document.file_name.replace("_", " "),
-			"file_size": {
-				"bytes": message.document.file_size,
-				"human": bytes_to_human(message.document.file_size)
-			},
-			"file_unique_id": message.document.file_unique_id,
-			"mime_type": message.document.mime_type,
-			"views": message.views,
-			"downloadable": True if message.document.file_size <= 20000000 else False,
-			"location": f"/l/{message.message_id}",
-			"download": f"/d/{message.message_id}" if message.document.file_size <= 20000000 else None,
+			"file_name": message.document.file_name,
+			"file_id": message.document.file_id
 		}
 		
-		book["size"]["bytes"] += message.document.file_size
-		book["size"]["human"] = bytes_to_human(book["size"]["bytes"])
+		book["size"] += message.document.file_size
 		
 		book["documents"].append(document)
 	
@@ -227,19 +125,19 @@ for book in books:
 		None if book["publisher"] is None else book["publisher"]["original"]
 	)
 	
-	if category is not None and category not in categories:
+	if category and category not in categories:
 		categories.append(category)
 	
-	if book_type is not None and book_type not in types:
+	if book_type and book_type not in types:
 		types.append(book_type)
 	
-	if author is not None and author not in authors:
+	if author and author not in authors:
 		authors.append(author)
 	
-	if narrator is not None and narrator not in narrators:
+	if narrator and narrator not in narrators:
 		narrators.append(narrator)
 
-	if publisher is not None and publisher not in publishers:
+	if publisher and publisher not in publishers:
 		publishers.append(publisher)
 
 with open(file=os.path.join(BOOKS_DIRECTORY, "categories.json"), mode="w") as file:

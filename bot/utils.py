@@ -1,4 +1,5 @@
 from typing import List
+import unicodedata
 import os
 
 from pyrogram.types import InputMediaDocument
@@ -42,4 +43,5 @@ def create_media_group(book: Book) -> List[InputMediaDocument]:
 		group.append(InputMediaDocument(document.file_id, caption=caption))
 	
 	return group
+
 
