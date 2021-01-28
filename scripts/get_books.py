@@ -100,7 +100,6 @@ while message_id < 145000:
 	
 	if message.document:
 		document = {
-			"file_name": message.document.file_name,
 			"file_id": message.document.file_id
 		}
 		

@@ -43,19 +43,9 @@ class Size(int):
 		self.human = bytes_to_human(size)
 
 
-class Message(int):
-	"""Um objeto representando infortações sobre uma mensagem no Telegram."""
-	def __init__(self, message_id):
-		self.link = "https://t.me/c/{}/{}".format(
-			abs(CHAT_ID), message_id
-		)
-
-
 class Document:
 	"""Objeto representando informações sobre um documento."""
 	def __init__(self, document):
-		self.message = Message(document["message"]) if document["message"] else None
-		self.file_name = document["file_name"]
 		self.file_id = document["file_id"]
 
 
