@@ -265,20 +265,12 @@ async def handle_book_page(client: Client, callback: CallbackQuery) -> None:
 	else:
 		reply_markup = create_book_page(strings, book)
 
-	if book.photo is None:
-		await client.send_message(
-			chat_id=callback.from_user.id,
-			text=create_caption(book),
-			disable_notification=True,
-			reply_markup=reply_markup
-		)
-	else:
-		await client.send_photo(
-			chat_id=callback.from_user.id,
-			photo=book.photo.file_id,
-			caption=create_caption(book),
-			reply_markup=reply_markup
-		)
+	await client.send_photo(
+		chat_id=callback.from_user.id,
+		photo=book.photo.file_id,
+		caption=create_caption(book),
+		reply_markup=reply_markup
+	)
 
 	await client.answer_callback_query(
 		callback_query_id=callback.id,
@@ -384,20 +376,12 @@ async def handle_list_add(client: Client, callback: CallbackQuery) -> None:
 	
 	reply_markup = create_lists_add(strings, book)
 	
-	if book.photo is None:
-		await client.edit_message_text(
-			chat_id=callback.from_user.id,
-			message_id=callback.message.message_id,
-			text=strings.which_to_add.format(book.title.original),
-			reply_markup=reply_markup
-		)
-	else:
-		await client.edit_message_caption(
-			chat_id=callback.from_user.id,
-			message_id=callback.message.message_id,
-			caption=strings.which_to_add.format(book.title.original),
-			reply_markup=reply_markup
-		)
+	await client.edit_message_caption(
+		chat_id=callback.from_user.id,
+		message_id=callback.message.message_id,
+		caption=strings.which_to_add.format(book.title),
+		reply_markup=reply_markup
+	)
 	
 	await client.answer_callback_query(
 		callback_query_id=callback.id,
@@ -522,20 +506,12 @@ async def handle_back_book(client: Client, callback: CallbackQuery) -> None:
 	else:
 		reply_markup = create_book_page(strings, book)
 	
-	if book.photo is None:
-		await client.edit_message_text(
-			chat_id=callback.from_user.id,
-			message_id=callback.message.message_id,
-			text=create_caption(book),
-			reply_markup=reply_markup
-		)
-	else:
-		await client.edit_message_caption(
-			chat_id=callback.from_user.id,
-			message_id=callback.message.message_id,
-			caption=create_caption(book),
-			reply_markup=reply_markup
-		)
+	await client.edit_message_caption(
+		chat_id=callback.from_user.id,
+		message_id=callback.message.message_id,
+		caption=create_caption(book),
+		reply_markup=reply_markup
+	)
 	
 	await client.answer_callback_query(
 		callback_query_id=callback.id,
@@ -1236,7 +1212,7 @@ async def handle_category(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_category.format(books[0][0].category.original),
+		text=strings.books_by_category.format(books[0][0].category),
 		reply_markup=reply_markup
 	)
 
@@ -1421,7 +1397,7 @@ async def handle_author(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_author.format(books[0][0].author.original),
+		text=strings.books_by_author.format(books[0][0].author),
 		reply_markup=reply_markup
 	)
 
@@ -1605,7 +1581,7 @@ async def handle_narrator(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_narrator.format(books[0][0].narrator.original),
+		text=strings.books_by_narrator.format(books[0][0].narrator),
 		reply_markup=reply_markup
 	)
 
@@ -1789,7 +1765,7 @@ async def handle_publisher(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_publisher.format(books[0][0].publisher.original),
+		text=strings.books_by_publisher.format(books[0][0].publisher),
 		reply_markup=reply_markup
 	)
 
@@ -1973,7 +1949,7 @@ async def handle_type(client: Client, callback: CallbackQuery) -> None:
 
 	await client.send_message(
 		chat_id=callback.from_user.id,
-		text=strings.books_by_type.format(books[0][0].type.original),
+		text=strings.books_by_type.format(books[0][0].type),
 		reply_markup=reply_markup
 	)
 
