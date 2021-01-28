@@ -10,7 +10,7 @@ PYROGRAM_OPTIONS = {
 	"api_id": None,
 	"api_hash": None,
 	"bot_token": None,
-	"workdir": os.path.join(str(CWD)), "files/pyrogram"),
+	"workdir": os.path.join(str(CWD), "files/pyrogram"),
 	"no_updates": True,
 }
 

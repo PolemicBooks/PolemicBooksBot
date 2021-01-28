@@ -55,7 +55,7 @@ while message_id < 145000:
 			"title": book_title,
 			"type": book_type,
 			"category": category,
-			"duration": None if book_type != "Audiobook" else human_duration_to_seconds(message.text.markdown),
+			"duration": None if book_type != "Audiobook" else human_duration_to_seconds(message.caption.markdown),
 			"size": 0,
 			"author": author,
 			"narrator": narrator,
