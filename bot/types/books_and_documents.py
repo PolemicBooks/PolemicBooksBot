@@ -6,7 +6,7 @@ import random
 from asyncpg.connection import Connection
 
 from .config import CHAT_ID
-from .utils import remove_accents, capitalize_words
+from .utils import remove_accents, capitalize_words, bytes_to_human
 
 
 # Um objeto representando um tipo de título, geralmente
