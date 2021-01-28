@@ -84,6 +84,7 @@ while message_id < 145000:
 		)
 		
 		book = {
+			"message": message.message_id,
 			"title": book_title,
 			"type": book_type,
 			"category": category,
