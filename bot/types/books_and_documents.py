@@ -9,10 +9,11 @@ from .config import CHAT_ID
 from .utils import remove_accents, capitalize_words, bytes_to_human
 
 
-# Um objeto representando um tipo de título, geralmente
-# o nome de um autor, editora, categoria e entre outros.
 class Title(str):
-	
+	"""
+	Um objeto representando um tipo de título, geralmente
+	o nome de um autor, editora, categoria e entre outros.
+	"""
 	def __init__(self, string):
 		self.capitalized = capitalize_words(string)
 		self.ascii_lower = remove_accents(string)
@@ -259,23 +260,23 @@ class UserLibrary:
 	def has(self, book: Book, category: Union[str, int] = None) -> bool:
 		if category is None:
 			return (
-				book.id in self.read or
-				book.id in self.reading or
-				book.id in self.dropped or
-				book.id in self.favorites
+				book.message in self.read or
+				book.message in self.reading or
+				book.message in self.dropped or
+				book.message in self.favorites
 			)
 		
 		if category in (1, "read"):
-			return (book.id in self.read)
+			return (book.message in self.read)
 		
 		if category in (2, "reading"):
-			return (book.id in self.reading)
+			return (book.message in self.reading)
 		
 		if category in (3, "dropped"):
-			return (book.id in self.dropped)
+			return (book.message in self.dropped)
 		
 		if category in (4, "favorites"):
-			return (book.id in self.favorites)
+			return (book.message in self.favorites)
 	
 	
 	# Este método é usado para adicionar um livro a uma das listas
@@ -285,13 +286,13 @@ class UserLibrary:
 			return
 		
 		if category in (1, "read"):
-			self.read.append(book.id)
+			self.read.append(book.message)
 		elif category in (2, "reading"):
-			self.reading.append(book.id)
+			self.reading.append(book.message)
 		elif category in (3, "dropped"):
-			self.dropped.append(book.id)
+			self.dropped.append(book.message)
 		elif category in (4, "favorites"):
-			self.favorites.append(book.id)
+			self.favorites.append(book.message)
 	
 	
 	# Este método é usado para remover um livro de uma das listas
@@ -301,26 +302,26 @@ class UserLibrary:
 			return
 			
 		if category is None:
-			if book.id in self.read:
-				self.read.remove(book.id)
-			elif book.id in self.reading:
-				self.reading.remove(book.id)
-			elif book.id in self.dropped:
-				self.dropped.remove(book.id)
+			if book.message in self.read:
+				self.read.remove(book.message)
+			elif book.message in self.reading:
+				self.reading.remove(book.message)
+			elif book.message in self.dropped:
+				self.dropped.remove(book.message)
 			return
 		
 		if category in (1, "read"):
-			if book.id in self.read:
-				self.read.remove(book.id)
+			if book.message in self.read:
+				self.read.remove(book.message)
 		elif category in (2, "reading"):
-			if book.id in self.reading:
-				self.reading.remove(book.id)
+			if book.message in self.reading:
+				self.reading.remove(book.message)
 		elif category in (3, "dropped"):
-			if book.id in self.dropped:
-				self.dropped.remove(book.id)
+			if book.message in self.dropped:
+				self.dropped.remove(book.message)
 		elif category in (4, "favorites"):
-			if book.id in self.favorites:
-				self.favorites.remove(book.id)
+			if book.message in self.favorites:
+				self.favorites.remove(book.message)
 	
 	
 	# Este método é usado para atualizar a row do usuário.
