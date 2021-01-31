@@ -41,13 +41,15 @@ while message_id < 145000:
 		
 		book_title = message.caption.split(sep="\n")[0]
 		
-		author, publisher, book_type, category, narrator, duration = (
+		author, publisher, book_type, category, narrator, duration, year, chapters = (
 			get_author(message.caption.markdown),
 			get_publisher(message.caption.markdown),
 			get_book_type(message.caption.markdown),
 			get_category(message.caption.markdown),
 			get_narrator(message.caption.markdown),
 			get_duration(message.caption.markdown),
+			get_year(message.caption.markdown),
+			get_chapters(message.caption.markdown),
 		)
 		
 		book = {
@@ -60,6 +62,8 @@ while message_id < 145000:
 			"author": author,
 			"narrator": narrator,
 			"publisher": publisher,
+			"year": year,
+			"chapters": chapters,
 			"photo": {
 				"file_id": message.photo.file_id
 			},
@@ -74,13 +78,15 @@ while message_id < 145000:
 		
 		book_title = message.text.split(sep="\n")[0]
 		
-		author, publisher, book_type, category, narrator, duration = (
+		author, publisher, book_type, category, narrator, duration, year, chapters = (
 			get_author(message.text.markdown),
 			get_publisher(message.text.markdown),
 			get_book_type(message.text.markdown),
 			get_category(message.text.markdown),
 			get_narrator(message.text.markdown),
 			get_duration(message.text.markdown),
+			get_year(message.text.markdown),
+			get_chapters(message.text.markdown),
 		)
 		
 		book = {
@@ -93,6 +99,8 @@ while message_id < 145000:
 			"author": author,
 			"narrator": narrator,
 			"publisher": publisher,
+			"year": year,
+			"chapters": chapters,
 			"photo": FALLBACK_COVER,
 			"documents": []
 		}
@@ -112,17 +120,18 @@ while message_id < 145000:
 
 books.append(book)
 
-categories, types, authors, narrators, publishers = (
+categories, types, authors, narrators, publishers, years = (
 	[], [], [], [], []
 )
 
 for book in books:
-	category, book_type, author, narrator, publisher = (
+	category, book_type, author, narrator, publisher, year = (
 		None if book["category"] is None else book["category"],
 		None if book["type"] is None else book["type"],
 		None if book["author"] is None else book["author"],
 		None if book["narrator"] is None else book["narrator"],
-		None if book["publisher"] is None else book["publisher"]
+		None if book["publisher"] is None else book["publisher"],
+		None if book["year"] is None else book["year"]
 	)
 	
 	if category and category not in categories:
@@ -139,6 +148,9 @@ for book in books:
 
 	if publisher and publisher not in publishers:
 		publishers.append(publisher)
+	
+	if year and year not in years:
+		years.append(year)
 
 with open(file=os.path.join(BOOKS_DIRECTORY, "categories.json"), mode="w") as file:
 	file.write(json.dumps(categories))
@@ -155,5 +167,9 @@ with open(file=os.path.join(BOOKS_DIRECTORY, "narrators.json"), mode="w") as fil
 with open(file=os.path.join(BOOKS_DIRECTORY, "publishers.json"), mode="w") as file:
 	file.write(json.dumps(publishers))
 
+with open(file=os.path.join(BOOKS_DIRECTORY, "years.json"), mode="w") as file:
+	file.write(json.dumps(years))
+
 with open(file=os.path.join(BOOKS_DIRECTORY, "books.json"), mode="w") as file:
 	file.write(json.dumps(books))
+

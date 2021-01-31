@@ -55,6 +55,8 @@ class Book:
 		self.narrator = Title(book["narrator"]) if book["narrator"] else None
 		self.publisher = Title(book["publisher"]) if book["publisher"] else None
 		self.duration = Duration(book["duration"]) if book["duration"] else None
+		self.year = book["year"]
+		self.chapters = book["chapters"]
 		self.size = Size(book["size"]) if book["size"] else None
 		self.photo = Photo(book["photo"]) if book["photo"] else None
 		self.documents = []
@@ -67,13 +69,14 @@ class Book:
 
 class Library:
 	"""Objeto representando informações sobre vários livros."""
-	def __init__(self, categories: dict, authors: dict, narrators: dict, publishers: dict, types: dict) -> None:
+	def __init__(self, categories: list, authors: list, narrators: list, publishers: list, types: list, years: list) -> None:
 		self.books = []
 		self.categories = categories
 		self.authors = authors
 		self.narrators = narrators
 		self.publishers = publishers
 		self.types = types
+		self.years = years
 		
 		# Ordenar todos os itens das listas em ordem alfabética.
 		self.categories.sort()
@@ -81,6 +84,7 @@ class Library:
 		self.narrators.sort()
 		self.publishers.sort()
 		self.types.sort()
+		self.years.sort()
 	
 	
 	# Este método é usado para obter uma lista de todas as categorias disponíveis.
@@ -108,6 +112,11 @@ class Library:
 		return self.create_pagination(list(enumerate(self.types)), fillvalue=(None, None))
 	
 	
+	# Este método é usado para obter uma lista de todos os anos de publicação disponíveis.
+	def get_years(self):
+		return self.create_pagination(list(enumerate(self.years)), fillvalue=(None, None))
+	
+	
 	# Este método é usado para obter um livro aleatório da lista.
 	def get_random(self) -> Book:
 		return random.choice(self.books)
@@ -129,7 +138,7 @@ class Library:
 	
 	
 	# Este método é usado para obter livros de um determinado tipo, autor, editora e entre outros.
-	def get_books(self, category: str = int, author: str = int, narrator: str = int, publisher: str = int, book_type: str = int) -> List[Book]:
+	def get_books(self, category: str = int, author: str = int, narrator: str = int, publisher: str = int, book_type: str = int, year: str = int) -> List[Book]:
 		
 		results = []
 		
@@ -167,6 +176,14 @@ class Library:
 				if book.type and book.type == type_name:
 					results.append(book)
 			return self.create_pagination(results)
+		
+		if isinstance(year, int):
+			year_value = self.years[year]
+			for book in self.books:
+				if book.year and book.year == year_value
+					results.append(book)
+			return self.create_pagination(results)
+		
 	
 	
 	# Este método é usado para pesquisar por livros.
@@ -215,6 +232,11 @@ class Library:
 			if book.publisher:
 				if (query in book.publisher.ascii_lower or
 					all(word in book.publisher.ascii_lower for word in splited_query)):
+					search_results.append(book)
+					continue
+			
+			if book.year:
+				if query == book.year:
 					search_results.append(book)
 					continue
 		

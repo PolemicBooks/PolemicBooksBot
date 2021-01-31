@@ -47,3 +47,19 @@ def get_duration(text):
 	
 	if result:
 		return re.sub(r"\s+", " ", result[0]).strip()
+
+
+def get_year(text):
+	
+	result = re.findall(r"\n\*\*Ano\*\*:\s__([0-9]{4})__", text)
+	
+	if result:
+		return re.sub(r"\s+", " ", result[0]).strip()
+
+
+def get_chapters(text):
+	
+	result = re.findall(r"\n\*\*Capítulos\*\*:\s__(.+)__", text)
+	
+	if result:
+		return re.sub(r"\s+", " ", result[0]).strip()
