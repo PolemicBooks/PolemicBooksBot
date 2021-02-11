@@ -57,6 +57,7 @@ class Book:
 		self.duration = Duration(book["duration"]) if book["duration"] else None
 		self.year = book["year"]
 		self.chapters = book["chapters"]
+		self.genre = book["genre"]
 		self.size = Size(book["size"]) if book["size"] else None
 		self.photo = Photo(book["photo"]) if book["photo"] else None
 		self.documents = []
@@ -69,7 +70,7 @@ class Book:
 
 class Library:
 	"""Objeto representando informações sobre vários livros."""
-	def __init__(self, categories: list, authors: list, narrators: list, publishers: list, types: list, years: list) -> None:
+	def __init__(self, categories: list, authors: list, narrators: list, publishers: list, types: list) -> None:
 		self.books = []
 		self.categories = categories
 		self.authors = authors
@@ -84,7 +85,6 @@ class Library:
 		self.narrators.sort()
 		self.publishers.sort()
 		self.types.sort()
-		self.years.sort()
 	
 	
 	# Este método é usado para obter uma lista de todas as categorias disponíveis.

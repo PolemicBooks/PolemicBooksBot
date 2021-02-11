@@ -40,8 +40,9 @@ while message_id < 145000:
 			books.append(book)
 		
 		book_title = message.caption.split(sep="\n")[0]
+		book_title = re.sub("\([0-9]{4}\)$", "", book_title).strip()
 		
-		author, publisher, book_type, category, narrator, duration, year, chapters = (
+		author, publisher, book_type, category, narrator, duration, year, chapters, genre, artist, volumes, original_language = (
 			get_author(message.caption.markdown),
 			get_publisher(message.caption.markdown),
 			get_book_type(message.caption.markdown),
@@ -50,6 +51,10 @@ while message_id < 145000:
 			get_duration(message.caption.markdown),
 			get_year(message.caption.markdown),
 			get_chapters(message.caption.markdown),
+			get_genres(message.caption.markdown),
+			get_artist(message.caption.markdown),
+			get_volumes(message.caption.markdown),
+			get_original_language(message.caption.markdown)
 		)
 		
 		book = {
@@ -60,10 +65,14 @@ while message_id < 145000:
 			"duration": None if book_type != "Audiobook" else human_duration_to_seconds(message.caption.markdown),
 			"size": 0,
 			"author": author,
+			"artist": artist,
 			"narrator": narrator,
 			"publisher": publisher,
 			"year": year,
+			"genre": genre,
+			"volumes": volumes,
 			"chapters": chapters,
+			"original_language": original_language,
 			"photo": {
 				"file_id": message.photo.file_id
 			},
@@ -77,8 +86,9 @@ while message_id < 145000:
 			books.append(book)
 		
 		book_title = message.text.split(sep="\n")[0]
+		book_title = re.sub("\([0-9]{4}\)$", "", book_title).strip()
 		
-		author, publisher, book_type, category, narrator, duration, year, chapters = (
+		author, publisher, book_type, category, narrator, duration, year, chapters, artist, volumes, original_language = (
 			get_author(message.text.markdown),
 			get_publisher(message.text.markdown),
 			get_book_type(message.text.markdown),
@@ -87,6 +97,10 @@ while message_id < 145000:
 			get_duration(message.text.markdown),
 			get_year(message.text.markdown),
 			get_chapters(message.text.markdown),
+			get_genres(message.text.markdown),
+			get_artist(message.text.markdown),
+			get_volumes(message.text.markdown),
+			get_original_language(message.text.markdown)
 		)
 		
 		book = {
@@ -97,10 +111,14 @@ while message_id < 145000:
 			"duration": None if book_type != "Audiobook" else human_duration_to_seconds(message.text.markdown),
 			"size": 0,
 			"author": author,
+			"artist": artist,
 			"narrator": narrator,
 			"publisher": publisher,
 			"year": year,
+			"genre": genre,
+			"volumes": volumes,
 			"chapters": chapters,
+			"original_language": original_language,
 			"photo": FALLBACK_COVER,
 			"documents": []
 		}
@@ -120,18 +138,18 @@ while message_id < 145000:
 
 books.append(book)
 
-categories, types, authors, narrators, publishers, years = (
-	[], [], [], [], []
+categories, types, authors, artists, narrators, publishers = (
+	[], [], [], [], [], []
 )
 
 for book in books:
-	category, book_type, author, narrator, publisher, year = (
+	category, book_type, author, artist, narrator, publisher = (
 		None if book["category"] is None else book["category"],
 		None if book["type"] is None else book["type"],
 		None if book["author"] is None else book["author"],
+		None if book["artist"] is None else book["artist"],
 		None if book["narrator"] is None else book["narrator"],
-		None if book["publisher"] is None else book["publisher"],
-		None if book["year"] is None else book["year"]
+		None if book["publisher"] is None else book["publisher"]
 	)
 	
 	if category and category not in categories:
@@ -143,14 +161,14 @@ for book in books:
 	if author and author not in authors:
 		authors.append(author)
 	
+	if artist and artist not in artists:
+		artists.append(artist)
+	
 	if narrator and narrator not in narrators:
 		narrators.append(narrator)
 
 	if publisher and publisher not in publishers:
 		publishers.append(publisher)
-	
-	if year and year not in years:
-		years.append(year)
 
 with open(file=os.path.join(BOOKS_DIRECTORY, "categories.json"), mode="w") as file:
 	file.write(json.dumps(categories))
@@ -161,14 +179,14 @@ with open(file=os.path.join(BOOKS_DIRECTORY, "types.json"), mode="w") as file:
 with open(file=os.path.join(BOOKS_DIRECTORY, "authors.json"), mode="w") as file:
 	file.write(json.dumps(authors))
 
+with open(file=os.path.join(BOOKS_DIRECTORY, "artists.json"), mode="w") as file:
+	file.write(json.dumps(artists))
+
 with open(file=os.path.join(BOOKS_DIRECTORY, "narrators.json"), mode="w") as file:
 	file.write(json.dumps(narrators))
 
 with open(file=os.path.join(BOOKS_DIRECTORY, "publishers.json"), mode="w") as file:
 	file.write(json.dumps(publishers))
-
-with open(file=os.path.join(BOOKS_DIRECTORY, "years.json"), mode="w") as file:
-	file.write(json.dumps(years))
 
 with open(file=os.path.join(BOOKS_DIRECTORY, "books.json"), mode="w") as file:
 	file.write(json.dumps(books))

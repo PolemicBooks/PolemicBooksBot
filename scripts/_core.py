@@ -57,9 +57,69 @@ def get_year(text):
 		return re.sub(r"\s+", " ", result[0]).strip()
 
 
+def get_original_language(text):
+	
+	result = re.findall(r"\n\*\*Idioma\*\*:\s__([0-9]{4})__", text)
+	
+	if result:
+		return re.sub(r"\s+", " ", result[0]).strip()
+
+
 def get_chapters(text):
 	
 	result = re.findall(r"\n\*\*Capítulos\*\*:\s__(.+)__", text)
 	
 	if result:
+		value = re.sub(r"\s+", " ", result[0]).strip()
+		try:
+			value = float(value)
+		except ValueError:
+			return
+		else:
+			if value.is_integer():
+				return int(value)
+			return value
+
+
+def get_volumes(text):
+	
+	result = re.findall(r"\n\*\*Volumes\*\*:\s__(.+)__", text)
+	
+	if result:
+		value = re.sub(r"\s+", " ", result[0]).strip()
+		try:
+			value = float(value)
+		except ValueError:
+			return
+		else:
+			if value.is_integer():
+				return int(value)
+			return value
+
+
+def get_artist(text):
+	
+	result = re.findall(r"\n\*\*Arte\*\*:\s__(.+)__", text)
+	
+	if result:
 		return re.sub(r"\s+", " ", result[0]).strip()
+
+
+def get_genres(text):
+	
+	result = re.findall(r"\n\*\*Gênero\*\*:\s__(.+)__", text)
+	
+	if result:
+		genres = result.replace(".", ",")
+		if "," in genres:
+			return [
+				word.strip().title() for word in genres.split(",") (
+					if not word.isspace() and len(word) > 2
+				)
+			]
+		else:
+			return [
+				word.strip().title() for word in genres.split(" ") (
+					if not word.isspace() and len(word) > 2
+				)
+			]

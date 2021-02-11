@@ -1,5 +1,5 @@
 import re
-import unicodedata
+
 
 def bytes_to_human(bytes):
 	
@@ -23,10 +23,6 @@ def bytes_to_human(bytes):
 	
 	if terabytes <= bytes:
 		return '{0:.2f} TB'.format(bytes / terabytes)
-
-
-def convert_filename(filename):
-	return filename.rstrip(' ')[:240].replace("/", ",").replace("  ", " ").replace("_", " ")
 
 
 def human_duration_to_seconds(text):
@@ -57,16 +53,5 @@ def capitalize_words(string):
 	return " ".join(
 		[
 			word.capitalize() if not word.istitle() and len(word) > 3 else word for word in string.split(" ")
-		]
-	)
-
-
-def remove_accents(string):
-	
-    nfkd = unicodedata.normalize('NFKD', string)
-    
-    return "".join(
-		[
-			character for character in nfkd if not unicodedata.combining(character)
 		]
 	)

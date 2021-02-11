@@ -18,12 +18,14 @@ def create_caption(book: Book) -> str:
 		caption += f"**Tipo**: __{book.type}__\n"
 	if book.category:
 		caption += f"**Categoria**: __{book.category}__\n"
+	if book.genre:
+		caption += f"**Gênero**: __{book.genre}__\n"
 	if book.duration:
 		caption += f"**Duração**: __{book.duration.human}__\n"
 	if book.size:
 		caption += f"**Tamanho**: __{book.size.human}__\n"
 	if book.chapters:
-		caption += f"**Ano**: __{book.chapters}__\n"
+		caption += f"**Capítulos**: __{book.chapters}__\n"
 	if book.year:
 		caption += f"**Ano**: __{book.year}__\n"
 	if book.author:
