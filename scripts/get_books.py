@@ -88,7 +88,7 @@ while message_id < 145000:
 		book_title = message.text.split(sep="\n")[0]
 		book_title = re.sub("\([0-9]{4}\)$", "", book_title).strip()
 		
-		author, publisher, book_type, category, narrator, duration, year, chapters, artist, volumes, original_language = (
+		author, publisher, book_type, category, narrator, duration, year, chapters, genre, artist, volumes, original_language = (
 			get_author(message.text.markdown),
 			get_publisher(message.text.markdown),
 			get_book_type(message.text.markdown),
