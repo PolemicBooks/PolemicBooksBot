@@ -77,6 +77,8 @@ class Database:
 	# Este método é usado para obter a "biblioteca" de livros do usuário.
 	async def get_library(self, user_id: int) -> UserLibrary:
 		user_row = await self.get_user(user_id)
+		if not user_row:
+			return
 		values = user_row.values()
 		
 		index, user_id, read, reading, dropped, favorites = list(values)

@@ -78,5 +78,5 @@
 	"dialog_commands_loaded": "A lista de comandos foi carregada.",
 	"button_delete_data": "🚮 Deletar",
 	"dialog_who_are_you": "Quem é você, humano vazio?",
-	"delete": "Ao clicar em \"__{}__\", todas as suas listas pessoais e sua identificação de usuário serão permanente excluídos.\n\nPara criar uma nova lista e/ou voltar a interagir com o bot, envie um /start novamente."
+	"delete": "Ao clicar em \"__{}__\", todas as suas listas pessoais e sua identificação de usuário serão permanente excluídos.\n\nPara criar uma nova lista e/ou voltar a interagir com o bot após isso, será necessário enviar o comando /start novamente."
 }

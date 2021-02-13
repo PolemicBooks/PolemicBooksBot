@@ -1,4 +1,5 @@
 import unicodedata
+import re
 
 
 # Este método é usado para converter a primeira letra de cada palavra com mais de
@@ -23,6 +24,11 @@ def remove_accents(string):
 			character for character in nfkd if not unicodedata.combining(character)
 		]
 	)
+
+
+# Este método é usado para remover pontuações de strings
+def remove_punctuation(string):
+	return re.sub(r'[^\w\s]','', string)
 
 
 # Este método é usado para converter bytes em uma string legível por humanos.

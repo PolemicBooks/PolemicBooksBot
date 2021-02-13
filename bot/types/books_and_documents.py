@@ -6,7 +6,7 @@ import random
 from asyncpg.connection import Connection
 
 from .config import CHAT_ID
-from .utils import remove_accents, capitalize_words, bytes_to_human
+from .utils import remove_accents, remove_punctuation, capitalize_words, bytes_to_human
 
 
 class Title(str):
@@ -16,7 +16,7 @@ class Title(str):
 	"""
 	def __init__(self, string):
 		self.capitalized = capitalize_words(string)
-		self.ascii_lower = remove_accents(string)
+		self.stripped = remove_punctuation(remove_accents(string))
 
 
 class Duration(int):
@@ -77,7 +77,6 @@ class Library:
 		self.narrators = narrators
 		self.publishers = publishers
 		self.types = types
-		self.years = years
 		
 		# Ordenar todos os itens das listas em ordem alfabética.
 		self.categories.sort()
@@ -138,7 +137,7 @@ class Library:
 	
 	
 	# Este método é usado para obter livros de um determinado tipo, autor, editora e entre outros.
-	def get_books(self, category: str = int, author: str = int, narrator: str = int, publisher: str = int, book_type: str = int, year: str = int) -> List[Book]:
+	def get_books(self, category: str = int, author: str = int, narrator: str = int, publisher: str = int, book_type: str = int) -> List[Book]:
 		
 		results = []
 		
@@ -176,67 +175,55 @@ class Library:
 				if book.type and book.type == type_name:
 					results.append(book)
 			return self.create_pagination(results)
-		
-		if isinstance(year, int):
-			year_value = self.years[year]
-			for book in self.books:
-				if book.year and book.year == year_value
-					results.append(book)
-			return self.create_pagination(results)
-		
 	
 	
 	# Este método é usado para pesquisar por livros.
 	def search(self, query: str) -> Union[None, List[Union[Book, None]]]:
 		search_results = []
 		
-		# Aqui convertemos todos os caracteres para minúsculo e removemos os acentos.
-		query = remove_accents(query.lower())
+		# Aqui convertemos todos os caracteres para minúsculo e também removemos os acentos e as
+		# pontuações.
+		query = remove_punctuation(remove_accents(query.lower()))
 		
 		# Aqui separamos cada palavra com mais de 2 caracteres em uma lista.
-		splited_query = [
+		splited_query = tuple(
 			word for word in query.split() if len(word) > 2
-		]
+		)
 		
 		for book in self.books:
 			if book.title:
-				if (query in book.title.ascii_lower or
-					all(word in book.title.ascii_lower for word in splited_query)):
+				if (query in book.title.stripped or
+					all(word in book.title.stripped for word in splited_query)):
 					search_results.append(book)
 					continue
 			
 			if book.type:
-				if (query in book.type.ascii_lower or
-					all(word in book.type.ascii_lower for word in splited_query)):
+				if (query in book.type.stripped or
+					all(word in book.type.stripped for word in splited_query)):
 					search_results.append(book)
 					continue
 			
 			if book.category:
-				if (query in book.category.ascii_lower or
-					all(word in book.category.ascii_lower for word in splited_query)):
+				if (query in book.category.stripped or
+					all(word in book.category.stripped for word in splited_query)):
 					search_results.append(book)
 					continue
 			
 			if book.author:
-				if (query in book.author.ascii_lower or
-					all(word in book.author.ascii_lower for word in splited_query)):
+				if (query in book.author.stripped or
+					all(word in book.author.stripped for word in splited_query)):
 					search_results.append(book)
 					continue
 			
 			if book.narrator:
-				if (query in book.narrator.ascii_lower or
-					all(word in book.narrator.ascii_lower for word in splited_query)):
+				if (query in book.narrator.stripped or
+					all(word in book.narrator.stripped for word in splited_query)):
 					search_results.append(book)
 					continue
 			
 			if book.publisher:
-				if (query in book.publisher.ascii_lower or
-					all(word in book.publisher.ascii_lower for word in splited_query)):
-					search_results.append(book)
-					continue
-			
-			if book.year:
-				if query == book.year:
+				if (query in book.publisher.stripped or
+					all(word in book.publisher.stripped for word in splited_query)):
 					search_results.append(book)
 					continue
 		
