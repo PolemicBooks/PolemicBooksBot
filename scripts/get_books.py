@@ -58,7 +58,7 @@ while message_id < 145000:
 		)
 		
 		book = {
-			"message": message.message_id,
+			"message_id": message.message_id,
 			"title": book_title,
 			"type": book_type,
 			"category": category,
@@ -104,7 +104,7 @@ while message_id < 145000:
 		)
 		
 		book = {
-			"message": message.message_id,
+			"message_id": message.message_id,
 			"title": book_title,
 			"type": book_type,
 			"category": category,
@@ -133,8 +133,6 @@ while message_id < 145000:
 		book["size"] += message.document.file_size
 		
 		book["documents"].append(document)
-	
-	print(json.dumps(book, indent=4))
 
 books.append(book)
 

@@ -111,16 +111,4 @@ def get_genres(text):
 	
 	if result:
 		return re.sub(r"\s+", " ", result[0]).strip()
-	
-	"""
-	if result:
-		genres = result.replace(".", ",")
-		if "," in genres:
-			return [
-				word.strip().title() for word in genres.split(",") if not word.isspace() and len(word) > 2
-			]
-		else:
-			return [
-				word.strip().title() for word in genres.split(" ") if not word.isspace() and len(word) > 2
-			]
-	"""
+
