@@ -59,7 +59,7 @@ def get_year(text):
 
 def get_original_language(text):
 	
-	result = re.findall(r"\n\*\*Idioma\*\*:\s__([0-9]{4})__", text)
+	result = re.findall(r"\n\*\*Idioma\*\*:\s__(.+)__", text)
 	
 	if result:
 		return re.sub(r"\s+", " ", result[0]).strip()
