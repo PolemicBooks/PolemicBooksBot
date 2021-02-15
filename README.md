@@ -1,1 +1,1 @@
-Work in progress
+Este projeto não está mais sendo mantido.
